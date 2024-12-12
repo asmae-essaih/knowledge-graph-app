@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        h1 { color: #333; }
+        .article-container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        img { max-height: 150px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+
+    {% if details %}
+      <div class="article-container">
+          {% for detail in details %}
+              {% if detail.thumbnail %}
+                  <img src="{{ detail.thumbnail.value }}" alt="{{ title }}">
+              {% endif %}
+              {% if detail.abstract %}
+                  <p>{{ detail.abstract.value }}</p>
+              {% else %}
+                  <p>No description available.</p>
+              {% endif %}
+          {% endfor %}
+      </div>
+      <a href="{{ url_for('index') }}">Back to Search</a>
+    {% else %}
+      <p>No details found for this article.</p>
+      <a href="{{ url_for('index') }}">Back to Search</a>
+    {% endif %}
+</body>
+</html>

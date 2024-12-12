@@ -1,65 +1,224 @@
-from flask import Flask, redirect, url_for, request, render_template, session
-import requests, os, uuid, json
+# # app.py
+# from flask import Flask, render_template, request
+# from SPARQLWrapper import SPARQLWrapper, JSON
+
+# app = Flask(__name__)
+
+# # Set up the SPARQL endpoint
+# sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+# sparql.setReturnFormat(JSON)
+
+# @app.route('/', methods=['GET', 'POST'])
+# def index():
+#     results = []
+#     if request.method == 'POST':
+#         search_query = request.form['search_query']
+        
+#         # Define your SPARQL query with the user's input
+#         query = f"""
+#         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+#         PREFIX dbo: <http://dbpedia.org/ontology/>
+#         PREFIX dct: <http://purl.org/dc/terms/>
+#         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+#         SELECT DISTINCT ?subject ?label ?thumbnail ?abstract WHERE {{
+#             ?subject rdf:type dbo:Person .
+#             ?subject rdfs:label ?label .
+#             OPTIONAL {{ ?subject dbo:thumbnail ?thumbnail . }}
+#             OPTIONAL {{ ?subject dbo:abstract ?abstract . }}
+#             FILTER (lang(?label) = "en" && lang(?abstract) = "en" && CONTAINS(LCASE(?label), LCASE("{search_query}")) )
+#         }}
+#         LIMIT 10
+#         """
+
+#         # Execute the query and convert results to JSON format
+#         sparql.setQuery(query)
+#         response = sparql.query().convert()
+        
+#         # Extracting bindings from the response
+#         results = response.get("results", {}).get("bindings", [])
+
+#     return render_template('index.html', results=results)
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
 
 
-#accéder au cles des service qet charger les valeurs depuis .env
-from dotenv import load_dotenv 
 
-load_dotenv()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# #app.py
+# from flask import Flask, render_template, request
+# from SPARQLWrapper import SPARQLWrapper, JSON
+
+# app = Flask(__name__)
+
+# # Set up the SPARQL endpoint (DBpedia)
+# sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+# sparql.setReturnFormat(JSON)
+
+# @app.route('/', methods=['GET', 'POST'])
+# def index():
+#     results = []
+#     if request.method == 'POST':
+#         search_query = request.form['search_query']
+        
+#         # Define your SPARQL query with the user's input
+#         query = f"""
+#         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+#         PREFIX dbo: <http://dbpedia.org/ontology/>
+#         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+#         SELECT DISTINCT ?subject ?label ?thumbnail ?abstract WHERE {{
+#             ?subject rdf:type dbo:Person .
+#             ?subject rdfs:label ?label .
+#             OPTIONAL {{ ?subject dbo:thumbnail ?thumbnail . }}
+#             OPTIONAL {{ ?subject dbo:abstract ?abstract . }}
+#             FILTER (lang(?label) = "en" && lang(?abstract) = "en" && CONTAINS(LCASE(?label), LCASE("{search_query}")) )
+#         }}
+#         LIMIT 10
+#         """
+
+#         # Execute the query and convert results to JSON format
+#         sparql.setQuery(query)
+#         response = sparql.query().convert()
+        
+#         # Extracting bindings from the response
+#         results = response.get("results", {}).get("bindings", [])
+
+#     return render_template('index.html', results=results)
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
+
+
+
+
+# from flask import Flask, render_template, request, redirect, url_for
+# from SPARQLWrapper import SPARQLWrapper, JSON
+
+# app = Flask(__name__)
+
+# # Set up the SPARQL endpoint (DBpedia)
+# sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+# sparql.setReturnFormat(JSON)
+
+# @app.route('/', methods=['GET', 'POST'])
+# def index():
+#     results = []
+#     if request.method == 'POST':
+#         search_query = request.form['search_query']
+        
+#         # Define your SPARQL query with the user's input
+#         query = f"""
+#         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+#         PREFIX dbo: <http://dbpedia.org/ontology/>
+#         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+#         SELECT DISTINCT ?subject ?label WHERE {{
+#             ?subject rdfs:label ?label .
+#             FILTER (lang(?label) = "en" && CONTAINS(LCASE(?label), LCASE("{search_query}")))
+#         }}
+#         LIMIT 10
+#         """
+
+#         # Execute the query and convert results to JSON format
+#         sparql.setQuery(query)
+#         response = sparql.query().convert()
+        
+#         # Extracting bindings from the response
+#         results = response.get("results", {}).get("bindings", [])
+
+#     return render_template('index.html', results=results)
+
+# @app.route('/article/<title>')
+# def article(title):
+#     # Redirect to the corresponding Wikipedia page
+#     return redirect(f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}")
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
+
+
+# app.py
+from flask import Flask, render_template, request, redirect, url_for
+from SPARQLWrapper import SPARQLWrapper, JSON
+
 app = Flask(__name__)
 
-#fonction qui retourn la page index
+# Set up the SPARQL endpoint (DBpedia)
+sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+sparql.setReturnFormat(JSON)
 
-@app.route('/',methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    results = []
+    if request.method == 'POST':
+        search_query = request.form['search_query']
+        
+        # Define your SPARQL query with the user's input
+        query = f"""
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX dbo: <http://dbpedia.org/ontology/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+        SELECT DISTINCT ?subject ?label WHERE {{
+            ?subject rdfs:label ?label .
+            FILTER (lang(?label) = "en" && CONTAINS(LCASE(?label), LCASE("{search_query}")))
+        }}
+        LIMIT 10
+        """
 
+        # Execute the query and convert results to JSON format
+        sparql.setQuery(query)
+        response = sparql.query().convert()
+        
+        # Extracting bindings from the response
+        results = response.get("results", {}).get("bindings", [])
 
+    return render_template('index.html', results=results)
 
-#fonction pour la créeation de l’itinéraire et de la logique de la traduction du texte
+@app.route('/article/<title>')
+def article(title):
+    # Define a SPARQL query to get detailed information about the selected article
+    query = f"""
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX dbo: <http://dbpedia.org/ontology/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-@app.route('/', methods=['POST'])
-def index_post():
-    # Read the values from the form
-    original_text = request.form['text']
-    target_language = request.form['language']
+    SELECT ?abstract ?thumbnail WHERE {{
+        <http://dbpedia.org/resource/{title.replace(' ', '_')}> rdfs:label ?label .
+        OPTIONAL {{ <http://dbpedia.org/resource/{title.replace(' ', '_')}> dbo:abstract ?abstract . }}
+        OPTIONAL {{ <http://dbpedia.org/resource/{title.replace(' ', '_')}> dbo:thumbnail ?thumbnail . }}
+        FILTER (lang(?label) = "en" && lang(?abstract) = "en")
+    }}
+    LIMIT 1
+    """
+    
+    sparql.setQuery(query)
+    response = sparql.query().convert()
+    
+    # Extracting details from the response
+    details = response.get("results", {}).get("bindings", [])
+    
+    return render_template('article.html', title=title, details=details)
 
-    # Load the values from .env
-    key = os.environ['KEY']
-    endpoint = os.environ['ENDPOINT']
-    location = os.environ['LOCATION']
-
-    # Indicate that we want to translate and the API version (3.0) and the target language
-    path = '/translate?api-version=3.0'
-    # Add the target language parameter
-    target_language_parameter = '&to=' + target_language
-    # Create the full URL
-    constructed_url = endpoint + path + target_language_parameter
-
-    # Set up the header information, which includes our subscription key
-    headers = {
-        'Ocp-Apim-Subscription-Key': key,
-        'Ocp-Apim-Subscription-Region': location,
-        'Content-type': 'application/json',
-        'X-ClientTraceId': str(uuid.uuid4())
-    }
-
-    # Create the body of the request with the text to be translated
-    body = [{ 'text': original_text }]
-
-    # Make the call using post
-    translator_request = requests.post(constructed_url, headers=headers, json=body)
-    # Retrieve the JSON response
-    translator_response = translator_request.json()
-    # Retrieve the translation
-    translated_text = translator_response[0]['translations'][0]['text']
-
-    # Call render template, passing the translated text,
-    # original text, and target language to the template
-    return render_template(
-        'results.html',
-        translated_text=translated_text,
-        original_text=original_text,
-        target_language=target_language
-    )
+if __name__ == '__main__':
+    app.run(debug=True)
